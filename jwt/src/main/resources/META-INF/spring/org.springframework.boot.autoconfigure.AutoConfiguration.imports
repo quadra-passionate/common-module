@@ -1,1 +1,1 @@
-com.quadra.common.jwt.JwtAutoConfiguration
+com.quadra.common.jwt.autoconfigure.JwtAutoConfiguration

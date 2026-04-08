@@ -2,14 +2,11 @@ plugins {
     id("com.quadra.spring-library-conventions")
 }
 
-version = "1.0.0-SNAPSHOT"
-
 dependencies {
+    api(project(":core"))
 
-    implementation("org.springframework.boot:spring-boot")
-    implementation("org.springframework.boot:spring-boot-autoconfigure")
-    implementation("org.springframework:spring-core")
-    implementation("org.springframework:spring-context")
-    // Used to implement jwt-related functionality
-    implementation("com.auth0:java-jwt:4.4.0")
+    // JWT-related functionality
+    api("io.jsonwebtoken:jjwt-api:0.11.5")
+    implementation("io.jsonwebtoken:jjwt-impl:0.11.5")
+    implementation("io.jsonwebtoken:jjwt-jackson:0.11.5")
 }
