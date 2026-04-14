@@ -21,10 +21,32 @@ jobs:
       - name: Detect changed modules
         id: changes
         run: |
-          MODULES=$(grep 'include(' settings.gradle.kts | sed 's/.*include(//' | sed 's/).*//' | sed 's/"//g' | tr ',' ' ')
-          CHANGED_MODULES=()
+          MODULES=$(awk '
+            BEGIN { in_include=0 }
           
-          echo "Detected modules: $MODULES"
+            /include\(/ {
+              in_include=1
+              sub(/.*include\(/, "")
+            }
+          
+            in_include {
+              gsub(/[()"]/,"")
+              gsub(/,/,"\n")
+              print
+            }
+          
+            /\)/ {
+              in_include=0
+            }
+          ' settings.gradle.kts \
+          | sed 's/^\s*//' \
+          | sed 's/\s*$//' \
+          | sed 's/^://' \
+          | grep -v '^$' \
+          | sort -u)
+          
+          echo "Detected modules:"
+          echo "$MODULES"
           
           # 변경된 파일 목록 확인
           if [ "${{ github.event_name }}" == "push" ]; then
@@ -83,7 +105,5 @@ jobs:
       - name: Publish ${{ matrix.module }} module
         run: ./gradlew :${{ matrix.module }}:publish
         env:
-          GITHUB_PLUGIN_USER: ${{ secrets.GH_PLUGIN_USER }}
-          GITHUB_PLUGIN_TOKEN: ${{ secrets.GH_PLUGIN_TOKEN }}
-          GITHUB_MODULE_USER: ${{ secrets.GH_MODULE_USER }}
-          GITHUB_MODULE_TOKEN: ${{ secrets.GH_MODULE_TOKEN }}
+          GPR_MODULE_USER: ${{secrets.GPR_MODULE_USER}}
+          GPR_MODULE_TOKEN: ${{secrets.GPR_MODULE_TOKEN}}
