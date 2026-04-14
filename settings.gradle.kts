@@ -10,8 +10,8 @@ pluginManagement {
         }
     }
     plugins {
-        id("com.quadra.spring-library-conventions") version "1.0.0"
-        id("com.quadra.library-conventions") version "1.0.0"
+        id("com.quadra.spring-library-conventions") version "1.0.1"
+        id("com.quadra.library-conventions") version "1.0.1"
     }
 }
 
